@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/*
+ * Reezy V1 design tokens — mirror Figma "01 — Foundations" (frozen, D59).
+ * Light mode only in V1 (D46). Do not add or change tokens without a design decision.
+ */
+@theme {
+  /* Color — DESIGN.md §9.3 */
+  --color-paper: #faf7f2;
+  --color-surface: #ffffff;
+  --color-ink: #1c1a1f;
+  --color-ink-muted: #6b6470;
+  --color-rule: #e8e2da;
+  --color-plum: #660045;
+  --color-pink: #fcb5ed;
+  --color-lime: #f4fd1d;
+  --color-danger: #a8201a;
+  /* Translucent values (Figma uses layer opacity / unbound colors for these) */
+  --color-scrim: rgb(28 26 31 / 0.38);
+  --color-cover-hairline: rgb(28 26 31 / 0.1);
+  --color-gap-line: rgb(102 0 69 / 0.35);
+
+  /* Type families (loaded in app/fonts.ts) */
+  --font-brand: var(--font-rammetto), ui-serif, serif;
+  --font-ui: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-reader: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  /* Radius — DESIGN.md §9.12 (pill = rounded-full) */
+  --radius-cover: 4px;
+  --radius-block: 16px;
+  --radius-sheet: 24px;
+
+  /* Elevation — sheets/dialogs and covers only */
+  --shadow-cover: 0 6px 18px rgb(28 26 31 / 0.16);
+  --shadow-cover-sm: 0 2px 6px rgb(28 26 31 / 0.14);
+  --shadow-sheet: 0 -4px 24px rgb(28 26 31 / 0.12);
+  --shadow-dialog: 0 16px 48px rgb(28 26 31 / 0.2);
+  --shadow-note: 0 6px 16px rgb(102 0 69 / 0.16);
+
+  /* Layout widths — DESIGN.md §9.14 */
+  --container-reading: 640px;
+  --container-dialog: 560px;
+}
+
+/* ---------- Text styles (Figma text styles, 1:1) ---------- */
+@utility text-display-xl { font-family: var(--font-brand); font-size: 48px; line-height: 52px; }
+@utility text-display-l  { font-family: var(--font-brand); font-size: 32px; line-height: 36px; }
+@utility text-page-number { font-family: var(--font-brand); font-size: 40px; line-height: 48px; }
+@utility text-heading    { font-family: var(--font-ui); font-weight: 600; font-size: 28px; line-height: 34px; letter-spacing: -0.4px; }
+@utility text-title      { font-family: var(--font-ui); font-weight: 600; font-size: 22px; line-height: 28px; letter-spacing: -0.2px; }
+@utility text-numeral    { font-family: var(--font-ui); font-weight: 600; font-size: 48px; line-height: 52px; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+@utility text-body       { font-family: var(--font-ui); font-weight: 400; font-size: 17px; line-height: 24px; }
+@utility text-body-strong { font-family: var(--font-ui); font-weight: 600; font-size: 17px; line-height: 24px; }
+@utility text-label      { font-family: var(--font-ui); font-weight: 500; font-size: 13px; line-height: 18px; letter-spacing: 0.1px; }
+@utility text-thought    { font-family: var(--font-reader); font-weight: 400; font-size: 19px; line-height: 29px; }
+@utility text-quote      { font-family: var(--font-reader); font-style: italic; font-weight: 400; font-size: 24px; line-height: 32px; }
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-pink);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-plum);
+    outline-offset: 2px;
+  }
+  input,
+  textarea {
+    font-size: max(16px, 1em); /* never below 16px (iOS zoom) — DESIGN.md §9.15 */
+  }
+  /* Desktop type step-up (~10%, DESIGN.md §9.14) is applied per layout in Phase 7, not globally. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
