@@ -13,7 +13,7 @@ const publicSchema = z.object({
 
 const serverSchema = z.object({
   SUPABASE_SECRET_KEY: z.string().min(20),
-  OPEN_LIBRARY_CONTACT: z.string().min(3).default("Reezy (contact via site)"),
+  OPEN_LIBRARY_CONTACT: z.string().min(3).default("Reezy (https://reezy.me)"),
 });
 
 export function publicEnv() {
@@ -29,6 +29,12 @@ export function serverEnv() {
     SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
     OPEN_LIBRARY_CONTACT: process.env.OPEN_LIBRARY_CONTACT,
   });
+}
+
+/** Contact sent to Open Library in the User-Agent. Non-secret; doesn't require the secret key. */
+export function openLibraryContact() {
+  const v = process.env.OPEN_LIBRARY_CONTACT?.trim();
+  return v && v.length >= 3 ? v : "Reezy (https://reezy.me)";
 }
 
 /** True when Supabase env vars are present (lets Phase 0 pages render before a project is linked). */

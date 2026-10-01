@@ -36,10 +36,10 @@ export function Cover({ title, author, coverId, width, className = "" }: Props) 
 
   if (coverId) {
     return (
-      <span className={frame} style={{ width, height }}>
+      <span className={`${frame} block`} style={{ width, height }}>
         {/* Plain <img>: Open Library serves sized JPEGs; avoids image-optimization costs. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={coverUrl(coverId, width)} alt={`Cover of ${title}`} width={width} height={height} loading="lazy" className="size-full object-cover" />
+        <img src={coverUrl(coverId, width)} alt={`Cover of ${title}`} width={width} height={height} loading={width > 100 ? "eager" : "lazy"} className="size-full object-cover" />
         {hairline}
       </span>
     );

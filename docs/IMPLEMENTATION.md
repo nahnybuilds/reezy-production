@@ -1,6 +1,6 @@
 # Reezy V1 — Implementation Plan
 
-> Status: **✅ Approved (with D60–D62).** Schema check pending before Phase 0. No production code yet.
+> Status: **✅ Approved (with D60–D62).** Schema approved (D63) and applied; Phase 0 foundation merged to `main`. Phase 1 (sign in and add a book) in review.
 >
 > Last updated: 2026-09-29 · Sources: `PRODUCT.md`, `DESIGN.md` (frozen Figma, D59), `DECISIONS.md`, `ARCHITECTURE.md` (stack D34/D35/D39)
 
