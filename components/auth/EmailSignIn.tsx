@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { BackLink } from "@/components/ui/BackLink";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { describeAuthError, SHOW_AUTH_DIAGNOSTICS } from "@/lib/auth/diagnostics";
 import { createClient } from "@/lib/supabase/browser";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,7 @@ export function EmailSignIn({ preview }: { preview?: "email" | "code" }) {
   const [code, setCode] = useState(preview === "code" ? "482" : "");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [diagnostic, setDiagnostic] = useState<string | null>(null); // TEMPORARY (see lib/auth/diagnostics.ts)
   const [pending, setPending] = useState(false);
   const codeRef = useRef<HTMLInputElement>(null);
   const codeId = useId();
@@ -39,9 +41,19 @@ export function EmailSignIn({ preview }: { preview?: "email" | "code" }) {
     if (!EMAIL.test(address)) return setError("Enter a valid email address.");
     if (preview) return setStep("code");
     setPending(true);
-    const { error: err } = await createClient().auth.signInWithOtp({ email: address, options: { shouldCreateUser: true } });
+    setDiagnostic(null);
+    let err: { message?: string } | null = null;
+    try {
+      ({ error: err } = await createClient().auth.signInWithOtp({ email: address, options: { shouldCreateUser: true } }));
+    } catch (thrown) {
+      err = thrown as Error; // e.g. missing env makes createClient() throw
+    }
     setPending(false);
-    if (err) return setError(friendly(err.message, "send"));
+    if (err) {
+      const detail = describeAuthError("signInWithOtp", err);
+      if (SHOW_AUTH_DIAGNOSTICS) setDiagnostic(detail);
+      return setError(friendly(err.message, "send"));
+    }
     if (step === "code") setNotice("We sent a new code.");
     setCode("");
     setStep("code");
@@ -83,6 +95,7 @@ export function EmailSignIn({ preview }: { preview?: "email" | "code" }) {
           onChange={(e) => setEmail(e.target.value)}
         />
         {error && <p role="alert" className="text-label text-danger">{error}</p>}
+        {diagnostic && <p className="break-words font-mono text-[12px] leading-4 text-ink-muted">Diagnostic (Preview only): {diagnostic}</p>}
         <Button type="submit" block disabled={pending}>{pending ? "Sending…" : "Send code"}</Button>
       </form>
     );
